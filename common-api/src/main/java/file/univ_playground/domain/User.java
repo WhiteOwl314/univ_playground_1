@@ -27,6 +27,6 @@ public class User {
 
     private String name;
 
-    @Column(name = "Comunity_id")
-    private Long comunityId;
+    @Column(name = "Community_id")
+    private Long communityId;
 }
