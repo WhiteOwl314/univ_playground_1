@@ -1,1 +1,3 @@
 rootProject.name = 'univ_playground'
+
+include 'onedayclass-api'
