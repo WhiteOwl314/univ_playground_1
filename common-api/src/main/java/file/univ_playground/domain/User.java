@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -23,11 +24,21 @@ public class User {
     @NotEmpty
     private String email;
 
+    @NotEmpty
+    private String nickName;
+
+    @NotEmpty
     private String password;
 
+    @NotEmpty
     private String name;
 
+    @NotNull
     private Integer age;
+
+    private String hobby;
+
+    private String birthday; //TODO: 생일 구현
 
     @Column(name = "Community_id")
     private Long communityId;
