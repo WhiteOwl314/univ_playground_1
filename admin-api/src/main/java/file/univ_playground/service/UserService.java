@@ -23,10 +23,27 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getusers() {
+    public List<User> getUsers() {
 
-        List<User> users = userRepository.findAll();
+        return userRepository.findAll();
+    }
 
-        return users;
+    public User addUser(
+            String email,
+            String password,
+            String nickName,
+            String name,
+            Integer age
+    ) {
+
+        User user = User.builder()
+                .email(email)
+                .password(password)
+                .nickName(nickName)
+                .name(name)
+                .age(age)
+                .build();
+
+        return userRepository.save(user);
     }
 }

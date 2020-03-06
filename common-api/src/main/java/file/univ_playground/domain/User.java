@@ -28,10 +28,10 @@ public class User {
     private String email;
 
     @NotEmpty
-    private String nickName;
+    private String password;
 
     @NotEmpty
-    private String password;
+    private String nickName;
 
     @NotEmpty
     private String name;
