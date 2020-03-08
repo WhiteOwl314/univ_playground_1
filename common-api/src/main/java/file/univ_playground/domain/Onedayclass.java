@@ -15,9 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
-@Table(name = "OndayClass")
 public class Onedayclass {
 
     @Id
@@ -27,9 +25,9 @@ public class Onedayclass {
     @NotNull
     private String name;
 
-    private User ondayclassManager;
+    private User onedayclassManager;
 
-    private List<User> ondayclassSubManager;
+    private List<User> onedayclassSubManager;
 
     private Community community;
 

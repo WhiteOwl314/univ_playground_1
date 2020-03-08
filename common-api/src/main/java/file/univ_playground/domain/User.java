@@ -30,6 +30,9 @@ public class User {
     @NotEmpty
     private String password;
 
+    @NotNull
+    private Long level;
+
     @NotEmpty
     private String nickName;
 
@@ -39,7 +42,7 @@ public class User {
     @NotNull
     private Integer age; //TODO: 생일값으로 나이 구하기
 
-    private String jop;
+    private String job;
 
     private String phoneNumber;
 
@@ -51,4 +54,16 @@ public class User {
 
     @Column(name = "Community_id")
     private Long communityId;
+
+    public boolean isAdmin(){
+        return level >= 100;
+    }
+
+    public boolean isActive(){
+        return level > 0 ;
+    }
+
+    public void deactive() {
+        level = 0L;
+    }
 }

@@ -24,6 +24,14 @@ public class UserController {
         return users;
     }
 
+    @GetMapping("/users/{id}")
+    public User getUser(
+            @PathVariable("id") Long userId
+    ){
+        User user = userService.getUser(userId);
+        return user;
+    }
+
     @PostMapping("/users")
     public ResponseEntity<?> create(
             @RequestBody User resource
@@ -45,5 +53,46 @@ public class UserController {
         String url = "/users/" + user.getId();
 
         return ResponseEntity.created(new URI(url)).body("{}");
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public String updatePasssword(
+            @PathVariable("id") Long id,
+            @RequestBody User resource
+    ){
+        String password = resource.getPassword();
+        userService.updatePassword(id, password);
+
+        return "{}";
+    }
+
+    @PatchMapping("/users/{id}/information")
+    public String updateInformation(
+            @PathVariable("id") Long id,
+            @RequestBody User resource
+    ){
+        String nickName = resource.getNickName();
+        String name = resource.getName();
+        String job = resource.getJob();
+        String phoneNumber = resource.getPhoneNumber();
+        String hobby = resource.getHobby();
+
+        userService.updateInformation(
+                id,
+                nickName,
+                name,
+                job,
+                phoneNumber,
+                hobby
+        );
+
+        return "{}";
+    }
+
+    @DeleteMapping("users/{id}")
+    public String deactivate(@PathVariable("id") Long id){
+        userService.deactiveUser(id);
+
+        return "{}";
     }
 }

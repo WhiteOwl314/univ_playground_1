@@ -42,6 +42,7 @@ class UserControllerTests {
                 .password("RJScnr1533")
                 .name("박성주")
                 .age(27)
+                .level(50L)
                 .build());
 
         given(userService.getUsers()).willReturn(users);
@@ -51,6 +52,34 @@ class UserControllerTests {
                 .andExpect(content()
                         .string(containsString("WhiteOwl")))
                 .andDo(print());
+    }
+
+    @Test
+    public void getUser() throws Exception {
+        String email = "parksj914@naver.com";
+        String nickName = "WhiteOwl";
+        String password = "RJScnr1533";
+        String name = "박성주";
+        Integer age = 27;
+
+        User user = User.builder()
+                .id(1L)
+                .level(50L)
+                .email(email)
+                .password(password)
+                .nickName(nickName)
+                .name(name)
+                .age(age)
+                .build();
+
+        given(userService.getUser(eq(1L))).willReturn(user);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .string(containsString("WhiteOwl")))
+                .andDo(print());
+
     }
 
     @Test
@@ -64,6 +93,7 @@ class UserControllerTests {
         User user = User.builder()
                 .email(email)
                 .password(password)
+                .nickName(nickName)
                 .name(name)
                 .age(age)
                 .build();
@@ -83,4 +113,60 @@ class UserControllerTests {
                 .andExpect(status().isCreated());
         verify(userService).addUser(email, password, nickName, name, age);
     }
+
+    @Test
+    public void updatePassword() throws Exception {
+        Long id = 1L;
+        String password = "RJScnr0329";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .patch("/users/"+ id +"/password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"password\": \"RJScnr0329\"\n" +
+                        "}"))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(userService).updatePassword(id, password);
+    }
+
+    @Test
+    public void updateInformation() throws Exception {
+
+        Long id = 1004L;
+        String nickName = "WhiteMonkey";
+        String name = "성주";
+        String job = "development";
+        String phoneNumber = "010-3925-1533";
+        String hobby = "Reading book";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .patch("/users/"+id+"/information")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"nickName\": \"WhiteMonkey\",\n" +
+                        "  \"name\": \"성주\",\n" +
+                        "  \"job\": \"development\",\n" +
+                        "  \"phoneNumber\": \"010-3925-1533\",\n" +
+                        "  \"hobby\": \"Reading book\"\n" +
+                        "}"))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(userService).updateInformation(
+                id,nickName,name,job,phoneNumber,hobby);
+    }
+
+    @Test
+    public void deactivate() throws Exception {
+        Long id = 1004L;
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/users/" + id))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(userService).deactiveUser(id);
+    }
+
 }
