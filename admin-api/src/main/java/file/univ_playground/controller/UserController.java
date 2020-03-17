@@ -41,13 +41,15 @@ public class UserController {
         String nickName = resource.getNickName();
         String name = resource.getName();
         Integer age = resource.getAge();
+        Long level = resource.getLevel();
 
         User user = userService.addUser(
                 email,
                 password,
                 nickName,
                 name,
-                age
+                age,
+                level
         );
 
         String url = "/users/" + user.getId();

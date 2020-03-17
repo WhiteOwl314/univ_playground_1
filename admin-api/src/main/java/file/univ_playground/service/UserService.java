@@ -4,9 +4,6 @@ import file.univ_playground.domain.User;
 import file.univ_playground.exception.UserNotFoundException;
 import file.univ_playground.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +36,8 @@ public class UserService {
             String password,
             String nickName,
             String name,
-            Integer age
-    ) {
+            Integer age,
+            Long level) {
 
         User user = User.builder()
                 .email(email)
@@ -48,6 +45,7 @@ public class UserService {
                 .nickName(nickName)
                 .name(name)
                 .age(age)
+                .level(level)
                 .build();
 
         return userRepository.save(user);

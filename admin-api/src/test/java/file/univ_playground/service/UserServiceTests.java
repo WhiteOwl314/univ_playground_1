@@ -118,6 +118,7 @@ class UserServiceTests {
         String nickName = "WhiteOwl";
         String name = "박성주";
         Integer age = 27;
+        Long level = 50L;
 
         User mockUser = User.builder()
                 .email(email)
@@ -125,12 +126,13 @@ class UserServiceTests {
                 .nickName(nickName)
                 .name(name)
                 .age(age)
+                .level(level)
                 .build();
 
         given(userRepository.save(any())).willReturn(mockUser);
 
         User user = userService
-                .addUser(email, password, nickName, name, age);
+                .addUser(email, password, nickName, name, age, level);
 
         assertAll(
                 () -> assertThat(user.getEmail()).isEqualTo(email),

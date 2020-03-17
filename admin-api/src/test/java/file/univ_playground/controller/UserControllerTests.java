@@ -89,6 +89,7 @@ class UserControllerTests {
         String password = "RJScnr1533";
         String name = "박성주";
         Integer age = 27;
+        Long level = 50L;
 
         User user = User.builder()
                 .email(email)
@@ -96,9 +97,10 @@ class UserControllerTests {
                 .nickName(nickName)
                 .name(name)
                 .age(age)
+                .level(level)
                 .build();
 
-        given(userService.addUser(email, password, nickName, name, age))
+        given(userService.addUser(email, password, nickName, name, age, level))
                 .willReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
@@ -111,7 +113,7 @@ class UserControllerTests {
                         "  \"age\": 27\n" +
                         "}"))
                 .andExpect(status().isCreated());
-        verify(userService).addUser(email, password, nickName, name, age);
+        verify(userService).addUser(email, password, nickName, name, age, level);
     }
 
     @Test
