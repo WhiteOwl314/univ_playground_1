@@ -18,3 +18,13 @@ services:
     depends_on:
       - mysql
     command: bash -c "cd /home/univ_playground && sh run.sh"
+  admin-web:
+    image: node:12-alpine
+    ports:
+      - 8001:3000
+    volumes:
+      - ./admin-web:/admin-web
+      - /admin-web/node_modules
+    working_dir: /admin-web/
+    command: sh -c "yarn install && yarn start"
+
