@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb:10.4.7
+    env_file: .env
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+  admin-api:
+    image: openjdk:8
+    env_file: .env
+    volumes:
+      - ./run.sh:/home/univ_playground/run.sh
+      - ./admin-api/build/libs:/home/univ_playground/libs
+    ports:
+      - 8002:8080
+    depends_on:
+      - mysql
+    command: bash -c "cd /home/univ_playground && sh run.sh"

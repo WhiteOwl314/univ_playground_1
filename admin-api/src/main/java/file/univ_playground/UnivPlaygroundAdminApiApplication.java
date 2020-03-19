@@ -9,5 +9,4 @@ public class UnivPlaygroundAdminApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(UnivPlaygroundAdminApiApplication.class, args);
     }
-
 }

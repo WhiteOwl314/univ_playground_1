@@ -2,7 +2,6 @@ package file.univ_playground.controller;
 
 import file.univ_playground.domain.User;
 import file.univ_playground.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
-@Slf4j
 class UserControllerTests {
 
     @Autowired
@@ -110,7 +108,8 @@ class UserControllerTests {
                         "  \"password\": \"RJScnr1533\",\n" +
                         "  \"nickName\": \"WhiteOwl\",\n" +
                         "  \"name\": \"박성주\",\n" +
-                        "  \"age\": 27\n" +
+                        "  \"age\": 27,\n" +
+                        "  \"level\": 50\n" +
                         "}"))
                 .andExpect(status().isCreated());
         verify(userService).addUser(email, password, nickName, name, age, level);
