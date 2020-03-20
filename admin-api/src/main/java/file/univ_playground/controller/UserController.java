@@ -32,7 +32,9 @@ public class UserController {
         return user;
     }
 
+    //User POST 요청
     @PostMapping("/users")
+    //ResponseEntity: 자세한 응답을 반환해줌
     public ResponseEntity<?> create(
             @RequestBody User resource
     ) throws URISyntaxException {
@@ -54,6 +56,7 @@ public class UserController {
 
         String url = "/users/" + user.getId();
 
+        //header에 새로생긴 url을 출력하게 해준다. 바디는 {} 로 나타낸다.
         return ResponseEntity.created(new URI(url)).body("{}");
     }
 

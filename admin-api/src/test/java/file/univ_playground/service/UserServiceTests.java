@@ -1,6 +1,9 @@
 package file.univ_playground.service;
 
 import file.univ_playground.domain.User;
+import file.univ_playground.exception.EmailExistedException;
+import file.univ_playground.exception.EmailNotExistedException;
+import file.univ_playground.exception.PasswordWrongException;
 import file.univ_playground.exception.UserNotFoundException;
 import file.univ_playground.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +28,18 @@ import static org.mockito.Mockito.verify;
 class UserServiceTests {
 
     @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
     private UserRepository userRepository;
-    @InjectMocks
+
     private UserService userService;
+
 
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.initMocks(this);
+        userService = new UserService(
+                userRepository, passwordEncoder);
     }
 
     @Test
@@ -140,7 +149,110 @@ class UserServiceTests {
                 () -> assertThat(user.getPassword()).isEqualTo(password),
                 () -> assertThat(user.getAge()).isEqualTo(age) //TODO: 이름 한글입력 안되는 것 수정
         );
+    }
 
+    @Test
+    public void addUserWithExistedEmail(){
+        String email = "parksj914@naver.com";
+        String password = "RJScnr1533";
+        String nickName = "WhiteOwl";
+        String name = "박성주";
+        Integer age = 27;
+        Long level = 50L;
+
+        User user = User.builder().build();
+        given(userRepository.findByEmail(email))
+                .willReturn(Optional.of(user));
+
+
+        assertThatThrownBy(
+                () -> {
+                    userService.addUser(
+                            email,
+                            password,
+                            nickName,
+                            name,
+                            age,
+                            level
+                    );
+                }).isInstanceOf(EmailExistedException.class);
+    }
+
+    //인증 성공
+    @Test
+    public void authenticateWithValidAttributes(){
+        String email = "parksj914@naver.com";
+        String password = "RJScnr1533";
+        String nickName = "WhiteOwl";
+        String name = "박성주";
+        Integer age = 27;
+        Long level = 50L;
+
+        User mockUser = User.builder()
+                .email(email)
+                .password(password)
+                .nickName(nickName)
+                .name(name)
+                .age(age)
+                .level(level)
+                .build();
+
+        given(userRepository.findByEmail(email))
+                .willReturn(Optional.of(mockUser));
+        given(passwordEncoder.matches(any(),any()))
+                .willReturn(true);
+
+        User user = userService.authenticate(email, password);
+
+        assertThat(user.getEmail()).isEqualTo(email);
+
+    }
+
+    //로그인 시 이메일이 없을때
+    @Test
+    public void authenticateWithNotExistedEmail(){
+        String email = "x@example.com";
+        String password = "test";
+
+        given(userRepository.findByEmail(email))
+                .willReturn(Optional.empty());
+
+
+        assertThatThrownBy(
+                () -> {
+                    userService.authenticate(email, password);
+                }).isInstanceOf(EmailNotExistedException.class);
+    }
+
+    // 비밀번호가 틀릴때
+    @Test
+    public void authenticateWithWrongPassword(){
+        Long id = 1004L;
+        String email = "parksj914@naver.com";
+        String password = "RJScnr1533";
+        String nickName = "WhiteOwl";
+        String name = "박성주";
+        Integer age = 27;
+
+
+        User mockUser = User.builder()
+                .id(1004L)
+                .email(email)
+                .password(password)
+                .nickName(nickName)
+                .name(name)
+                .age(age)
+                .build();
+        given(userRepository.findByEmail(email))
+                .willReturn(Optional.of(mockUser));
+        given(passwordEncoder.matches(any(),any()))
+                .willReturn(false);
+
+        assertThrows(
+                PasswordWrongException.class,
+                () -> userService
+                        .authenticate(email, password)
+                );
     }
 
     @Test
