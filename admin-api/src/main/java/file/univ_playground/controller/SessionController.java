@@ -4,6 +4,7 @@ import file.univ_playground.domain.User;
 import file.univ_playground.dto.SessionRequestDto;
 import file.univ_playground.dto.SessionResponseDto;
 import file.univ_playground.service.UserService;
+import file.univ_playground.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,8 @@ import java.net.URISyntaxException;
 @RestController
 public class SessionController {
 
+    @Autowired
+    private JwtUtil jwtUtil;
     @Autowired
     private UserService userService;
 
@@ -31,7 +34,7 @@ public class SessionController {
         User user = userService.authenticate(email,password);
 
         //getAccessToken은 비밀번호의 처음 10자리로 초기설정됨
-        String accessToken = user.getAccessToken();
+        String accessToken = jwtUtil.createToken(user.getId(),user.getName());
 
         //응답
         //accessToken 을 반환해준다

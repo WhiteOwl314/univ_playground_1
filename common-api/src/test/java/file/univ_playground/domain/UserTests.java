@@ -15,6 +15,7 @@ class UserTests {
                 .password("RJScnr1533")
                 .name("박성주")
                 .age(27)
+                .level(100L)
                 .build();
 
         assertAll(
@@ -27,23 +28,15 @@ class UserTests {
                 () -> assertThat(user1.getName())
                         .isEqualTo("박성주"),
                 () -> assertThat(user1.getAge())
-                        .isEqualTo(27)
+                        .isEqualTo(27),
+                () -> assertThat(user1.isAdmin())
+                        .isEqualTo(true),
+                () -> assertThat(user1.isActive())
+                        .isEqualTo(true)
         );
-    }
 
-    @Test
-    public void accessTokenWithPassword(){
-        User user = User.builder()
-                .password("ACCESSTOKEN")
-                .build();
+        user1.deactive();
 
-        assertThat(user.getAccessToken()).isEqualTo("ACCESSTOKE");
-    }
-
-    @Test
-    public void accessTokenWithoutPassword(){
-        User user = new User();
-
-        assertThat(user.getAccessToken()).isEqualTo("");
+        assertThat(user1.isActive()).isEqualTo(false);
     }
 }

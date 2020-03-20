@@ -4,6 +4,7 @@ import file.univ_playground.domain.User;
 import file.univ_playground.exception.EmailNotExistedException;
 import file.univ_playground.exception.PasswordWrongException;
 import file.univ_playground.service.UserService;
+import file.univ_playground.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -27,6 +29,8 @@ class SessionControllerTests {
 
     @MockBean
     private UserService userService;
+    @MockBean
+    private JwtUtil jwtUtil;
 
     //인증 성공 -> 토큰 줌
     @Test
@@ -35,7 +39,7 @@ class SessionControllerTests {
         String email = "parksj914@naver.com";
         String password = "RJScnr1533";
         String nickName = "WhiteOwl";
-        String name = "박성주";
+        String name = "seongju";
         Integer age = 27;
 
 
@@ -49,6 +53,8 @@ class SessionControllerTests {
                 .build();
         given(userService.authenticate(email,password))
                 .willReturn(mockUser);
+        given(jwtUtil.createToken(id,name))
+                .willReturn("header.payload.signiture");
 
         mockMvc.perform(MockMvcRequestBuilders.post(
                 "/session")
@@ -60,9 +66,9 @@ class SessionControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().string(
                         "location","/session"))
-                .andExpect(content().string(
-                        "" +
-                                "{\"accessToken\":\"RJScnr1533\"}"))
+                .andExpect(content().string(containsString(
+                        "{\"accessToken\":\"header.payload.signiture\"}"
+                )))
                 .andDo(print());
         verify(userService).authenticate(eq(email),eq(password));
     }

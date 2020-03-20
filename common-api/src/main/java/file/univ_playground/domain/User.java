@@ -67,10 +67,4 @@ public class User {
         level = 0L;
     }
 
-    public String getAccessToken() {
-        if(password == null){
-            return "";
-        }
-        return password.substring(0,10);
-    }
 }
